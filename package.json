@@ -4,22 +4,25 @@
   "description": "",
   "main": "dist/main.js",
   "scripts": {
+    "clean": "rmdir /s /q dist",
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron ."
+    "start": "npm run build && electron --trace-warnings ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^20.11.30",
+    "@types/play-sound": "^1.1.2",
     "electron": "^29.3.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.3"
   },
   "dependencies": {
+    "dotenv": "^16.4.5",
     "fs": "^0.0.1-security",
     "openai": "^4.33.1",
+    "play-sound": "^1.1.6",
     "tiktoken": "^1.0.13"
   }
 }
