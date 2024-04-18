@@ -39,34 +39,3 @@ app.on("window-all-closed", () => {
     app.quit();
   }
 });
-
-// function deleteOlderMessages(): void {
-//   let contextLength: number = getContextLength();
-//   while (contextLength > MAX_TOKENS) {
-//     for (let i = 0; i < context.length; i++) {
-//       const message = context[i];
-//       if (message.role != "system") {
-//         context.splice(i, 1);
-//         contextLength = getContextLength();
-//         console.log("New context length: " + contextLength);
-//         break;
-//       }
-//     }
-//   }
-// }
-
-// function getContextLength(): number {
-//   let length: number = 0;
-//   context.forEach((message) => {
-//     if (typeof message.content === "string") {
-//       length += Buffer.from(message.content).length;
-//     } else if (Array.isArray(message.content)) {
-//       (message.content as string[]).forEach((messageContent) => {
-//         if (typeof messageContent === 'string') {
-//           length += Buffer.from(messageContent).length;
-//         }
-//       });
-//     }
-//   });
-//   return length;
-// }
