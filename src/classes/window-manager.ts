@@ -1,5 +1,6 @@
 import { BrowserWindow } from "electron";
 import { ChatCompletionMessage } from "openai/resources";
+import path from "path";
 
 export class WindowManager {
   private mainWindow!: BrowserWindow;
@@ -12,12 +13,14 @@ export class WindowManager {
       x: 300,
       y: 0,
       webPreferences: {
+        preload: path.join(__dirname, "preload.js"), // Path to transpiled preload script
         nodeIntegration: true,
         contextIsolation: false,
         webSecurity: false,
       },
     });
     this.mainWindow.loadURL("http://roll20.net");
+    this.mainWindow.webContents.openDevTools();
   }
 
   public createChatWindow(): void {
