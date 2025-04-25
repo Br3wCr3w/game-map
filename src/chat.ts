@@ -50,6 +50,3 @@ function callMainProcessFunction(message: string): void {
   ipcRenderer.send("chatRequest", message);
 }
 
-function neverUserd() {
-  console.log("never used");
-}
