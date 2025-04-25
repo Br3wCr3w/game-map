@@ -7,9 +7,9 @@ class WindowManager {
     chatWindow;
     createMainWindow() {
         this.mainWindow = new electron_1.BrowserWindow({
-            width: 400,
+            width: 800,
             height: 600,
-            x: 200,
+            x: 300,
             y: 0,
             webPreferences: {
                 nodeIntegration: true,
@@ -21,7 +21,7 @@ class WindowManager {
     }
     createChatWindow() {
         this.chatWindow = new electron_1.BrowserWindow({
-            width: 200,
+            width: 300,
             height: 600,
             x: 0,
             y: 0,

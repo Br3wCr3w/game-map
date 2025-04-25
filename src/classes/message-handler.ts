@@ -1,13 +1,12 @@
 import { OpenAI } from "openai";
 import { Message } from "../interfaces/message";
 import { ChatCompletionMessage } from "openai/resources";
-import { existsSync, writeFileSync } from "fs";
-import player from "play-sound";
-import path from "path";
+import { AudioHandler } from "./audio-handler";
 
 // Example of a class to handle messaging logic
 export class MessageHandler {
   protected openai!: OpenAI;
+  protected audioHandler!: AudioHandler;
   protected MAX_TOKENS: number = 32000;
   protected context: Message[] = [
     {
@@ -16,6 +15,9 @@ export class MessageHandler {
         "You are a Dungeon Master for a 5th edition game of Dungeons and Dragons. You are loud and humorous. Give a one or two sentence narrative about the action given.",
     },
   ];
+  constructor() {
+    this.audioHandler = new AudioHandler();
+  }
 
   public async handleChatRequest(
     input: string
@@ -32,45 +34,41 @@ export class MessageHandler {
       messages: this.context as any,
     });
 
-    await this.textToSpeech(response.choices[0]?.message?.content || "");
+    await this.audioHandler.textToSpeech(
+      response.choices[0]?.message?.content || ""
+    );
 
     return response.choices[0].message;
   }
 
-  public async textToSpeech(speechText: string): Promise<void> {
-    const openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-    });
-    const response = await openai.audio.speech.create({
-      input: speechText,
-      voice: "fable",
-      model: "tts-1",
-      response_format: "mp3",
-    });
-    const buffer: Buffer = Buffer.from(await response.arrayBuffer());
-
-    // Choose a directory path to ensure the file path is correct
-    const filePath = path.join(__dirname, "speech1.mp3");
-    writeFileSync(filePath, buffer);
-
-    console.log(`File written to ${filePath}`);
-
-    // Check if the file exists before trying to play it
-    if (existsSync(filePath)) {
-      console.log("File exists, trying to play...");
-
-      // Play the MP3 automatically using play-sound
-      player().play(filePath, (err) => {
-        if (err) {
-          console.error("Error playing sound:", err);
-        } else {
-          console.log("Playback successful");
+  public deleteOlderMessages(): void {
+    let contextLength: number = this.getContextLength();
+    while (contextLength > this.MAX_TOKENS) {
+      for (let i = 0; i < this.context.length; i++) {
+        const message = this.context[i];
+        if (message.role != "system") {
+          this.context.splice(i, 1);
+          contextLength = this.getContextLength();
+          console.log("New context length: " + contextLength);
+          break;
         }
-      });
-    } else {
-      console.error("File does not exist:", filePath);
+      }
     }
+  }
 
-    return Promise.resolve();
+  public getContextLength(): number {
+    let length: number = 0;
+    this.context.forEach((message) => {
+      if (typeof message.content === "string") {
+        length += Buffer.from(message.content).length;
+      } else if (Array.isArray(message.content)) {
+        (message.content as string[]).forEach((messageContent) => {
+          if (typeof messageContent === "string") {
+            length += Buffer.from(messageContent).length;
+          }
+        });
+      }
+    });
+    return length;
   }
 }
