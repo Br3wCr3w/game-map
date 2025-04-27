@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Chat with Dungeon Master</title>
+    <title>Chat with DM</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -18,6 +18,9 @@
         />
         <button type="submit">Send</button>
       </form>
+      <div id="snack-container">
+        <button id="scooby-snack-btn" type="button">Scooby Snack!</button>
+      </div>
       <div id="datetime-display">Mystery time loading...</div>
       <div id="copyright">© <span id="current-year"></span> Mystery Machine Chat. Jinkies! All rights reserved.</div>
     </div>
@@ -39,7 +42,14 @@
         setTimeout(updateDateTime, 1000);
       }
       
-      document.addEventListener('DOMContentLoaded', updateDateTime);
+      document.addEventListener('DOMContentLoaded', () => {
+        updateDateTime();
+        
+        // Scooby snack button functionality
+        document.getElementById('scooby-snack-btn').addEventListener('click', () => {
+          alert('SCOOBY SNACKS! ZOINKS!!');
+        });
+      });
     </script>
   </body>
 </html>

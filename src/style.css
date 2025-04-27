@@ -97,3 +97,33 @@ button:hover {
 #copyright span {
   color: #ff7800;
 }
+
+#snack-container {
+  text-align: center;
+  padding: 12px;
+  background: #3c2252;
+  border-top: 1px solid #553977;
+}
+
+#scooby-snack-btn {
+  background-color: #7ab317;
+  color: #2a1b3d;
+  padding: 10px 25px;
+  border: 3px solid #5c8a12;
+  border-radius: 25px;
+  font-size: 1.1em;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#scooby-snack-btn:hover {
+  background-color: #8bc72b;
+  transform: scale(1.05) rotate(2deg);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+#scooby-snack-btn:active {
+  transform: scale(0.95);
+}
