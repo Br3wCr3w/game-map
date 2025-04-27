@@ -34,11 +34,39 @@
           text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.7), 0 0 20px rgba(255, 120, 0, 0.9);
         }
       }
+      
+      .hero-buttons {
+        margin-top: 20px;
+      }
+      
+      .hero-button {
+        background-color: #ff7800;
+        color: #2a1b3d;
+        padding: 10px 25px;
+        border: none;
+        border-radius: 25px;
+        font-size: 1.1em;
+        font-weight: bold;
+        margin: 0 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+      
+      .hero-button:hover {
+        background-color: #f0a742;
+        transform: scale(1.05);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+      }
     </style>
   </head>
   <body>
     <div class="hero-banner">
       <h1 class="hero-title">Roplayers</h1>
+      <div class="hero-buttons">
+        <button class="hero-button" id="radio-btn">Radio</button>
+        <button class="hero-button" id="movie-btn">Movie</button>
+      </div>
     </div>
     <div id="chat-container">
       <div id="messages"></div>
