@@ -83,3 +83,17 @@ button:hover {
   font-weight: bold;
   letter-spacing: 0.5px;
 }
+
+#copyright {
+  text-align: center;
+  padding: 8px;
+  background: #2a1b3d;
+  color: #ab98c7;
+  font-size: 0.8em;
+  border-top: 1px solid #553977;
+  font-style: italic;
+}
+
+#copyright span {
+  color: #ff7800;
+}
