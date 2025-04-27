@@ -5,8 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chat with DM</title>
     <link rel="stylesheet" href="style.css" />
+    <style>
+      .hero-banner {
+        background: linear-gradient(135deg, #3c2252 0%, #2a1b3d 100%);
+        text-align: center;
+        padding: 40px 20px;
+        margin-bottom: 20px;
+        border-bottom: 4px solid #ff7800;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+      
+      .hero-title {
+        font-size: 4rem;
+        font-weight: bold;
+        color: #f0e6c9;
+        text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5), 0 0 10px rgba(255, 120, 0, 0.7);
+        margin: 0;
+        letter-spacing: 3px;
+        transform: perspective(500px) rotateX(5deg);
+        animation: glow 2s ease-in-out infinite alternate;
+      }
+      
+      @keyframes glow {
+        from {
+          text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5), 0 0 10px rgba(255, 120, 0, 0.7);
+        }
+        to {
+          text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.7), 0 0 20px rgba(255, 120, 0, 0.9);
+        }
+      }
+    </style>
   </head>
   <body>
+    <div class="hero-banner">
+      <h1 class="hero-title">Roplayers</h1>
+    </div>
     <div id="chat-container">
       <div id="messages"></div>
       <form id="message-form">
