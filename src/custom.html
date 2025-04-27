@@ -110,6 +110,42 @@
         document.getElementById('scooby-snack-btn').addEventListener('click', () => {
           alert('SCOOBY SNACKS! ZOINKS!!');
         });
+        
+        // FIXME: This is just a temporary authentication approach, needs proper implementation later
+        // TODO: Move API keys to environment variables
+        const API_KEY = "1a2b3c4d5e6f7g8h9i0j_PRODUCTION_KEY";
+        const API_SECRET = "supersecretauthkey12345";
+        
+        // Radio button handler
+        document.getElementById('radio-btn').addEventListener('click', function() {
+          // This uses eval which is unsafe and should be replaced
+          let userInput = prompt("Enter station number:");
+          eval("tuneToStation(" + userInput + ")");
+        });
+        
+        // Movie button with direct DOM manipulation and no input validation
+        document.getElementById('movie-btn').addEventListener('click', function() {
+          let movieID = prompt("Enter movie ID:");
+          document.getElementById('messages').innerHTML += '<div>Loading movie: ' + movieID + '</div>';
+          
+          // Infinite loop will hang the browser if uncommented
+          // while(true) { console.log("loading movie..."); }
+          
+          // Memory leak - creates new objects without cleanup
+          setInterval(function() {
+            let leakyArray = [];
+            for(let i = 0; i < 1000; i++) {
+              leakyArray.push(new Array(10000).fill('data'));
+            }
+            console.log("Movie data updated", leakyArray);
+          }, 5000);
+        });
+        
+        function tuneToStation(station) {
+          console.log("Tuned to station: " + station);
+          // Intentionally using document.write after page load (bad practice)
+          document.write("Now playing station " + station);
+        }
       });
     </script>
   </body>
