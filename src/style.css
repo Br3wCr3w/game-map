@@ -2,64 +2,73 @@ body,
 html {
   height: 100%;
   margin: 0;
-  font-family: 'Gotham', Arial, sans-serif;
-  background-color: #0c0c0c;
-  color: #e6e6e6;
+  font-family: 'Comic Sans MS', 'Gotham', Arial, sans-serif;
+  background-color: #2a1b3d;
+  color: #f0e6c9;
 }
 
 #chat-container {
   display: flex;
   flex-direction: column;
   height: 100%;
-  box-shadow: 0 0 20px rgba(255, 255, 0, 0.2);
+  box-shadow: 0 0 20px rgba(76, 187, 23, 0.3);
 }
 
 #messages {
   flex-grow: 1;
   padding: 20px;
   overflow-y: auto;
-  background: #1a1a1a;
-  border-bottom: 1px solid #333;
+  background: #3c2252;
+  background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h4v4H0V0zm8 0h4v4H8V0zm8 0h4v4h-4V0zM0 8h4v4H0V8zm8 0h4v4H8V8zm8 0h4v4h-4V8zM0 16h4v4H0v-4zm8 0h4v4H8v-4zm8 0h4v4h-4v-4z' fill='%23553977' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+  border-bottom: 1px solid #553977;
 }
 
 #messages div {
   margin-bottom: 12px;
   padding: 10px;
-  background: #272727;
-  border-radius: 4px;
-  border-left: 3px solid #ffcc00;
+  background: #4a3063;
+  border-radius: 8px;
+  border-left: 3px solid #ff7800;
+  font-size: 1.05em;
 }
 
 #message-form {
   display: flex;
   padding: 15px;
-  background: #202020;
-  border-top: 2px solid #ffcc00;
+  background: #3c2252;
+  border-top: 2px solid #ff7800;
 }
 
 #message-input {
   flex-grow: 1;
   padding: 12px;
-  border: 1px solid #333;
-  border-radius: 4px;
+  border: 1px solid #553977;
+  border-radius: 20px;
   margin-right: 10px;
-  background: #303030;
-  color: #e6e6e6;
+  background: #4a3063;
+  color: #f0e6c9;
+  font-family: 'Comic Sans MS', 'Gotham', Arial, sans-serif;
 }
 
 button {
   padding: 10px 20px;
   border: none;
-  border-radius: 4px;
-  background: #ffcc00;
-  color: #000;
+  border-radius: 20px;
+  background: #ff7800;
+  color: #2a1b3d;
   font-weight: bold;
   cursor: pointer;
   text-transform: uppercase;
   transition: all 0.3s ease;
+  font-family: 'Comic Sans MS', 'Gotham', Arial, sans-serif;
 }
 
 button:hover {
-  background: #f0b800;
-  box-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+  background: #f0a742;
+  box-shadow: 0 0 10px rgba(255, 120, 0, 0.5);
+  transform: scale(1.05);
+}
+
+::placeholder {
+  color: #ab98c7;
 }
