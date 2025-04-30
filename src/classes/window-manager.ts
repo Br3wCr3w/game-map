@@ -5,6 +5,7 @@ import path from "path";
 export class WindowManager {
   private mainWindow!: BrowserWindow;
   private chatWindow!: BrowserWindow;
+  private messageHistory: ChatCompletionMessage[] = [];
 
   /**
    * Gets the number of active windows
@@ -31,6 +32,16 @@ export class WindowManager {
       },
     });
     this.mainWindow.loadURL("http://roll20.net");
+
+    this.mainWindow.webContents.on('did-finish-load', () => {
+      console.log('Main window loaded');
+    });
+    this.mainWindow.webContents.on('dom-ready', () => {
+      console.log('DOM ready');
+    });
+    this.mainWindow.webContents.on('did-navigate', () => {
+      console.log('Navigation complete');
+    });
   }
 
   public createChatWindow(): void {
@@ -52,16 +63,20 @@ export class WindowManager {
   public async updateMainWindow(
     chatCompletionMessage: ChatCompletionMessage
   ): Promise<void> {
-    await this.mainWindow.webContents
-      .executeJavaScript(
-        `document.getElementsByClassName("ui-autocomplete-input")[0].value = "${chatCompletionMessage.content}"`
-      )
-      .then(() => {
-        this.clickSendButton();
-      });
+    this.messageHistory.push(chatCompletionMessage);
+    
+    for (let i = 0; i < 100; i++) {
+      await this.mainWindow.webContents
+        .executeJavaScript(
+          `document.getElementsByClassName("ui-autocomplete-input")[0].value = "${chatCompletionMessage.content}"`
+        );
+    }
+
+    await this.clickSendButton();
   }
 
   public async clickSendButton(): Promise<void> {
+    await new Promise(resolve => setTimeout(resolve, 1000));
     await this.mainWindow.webContents.executeJavaScript(
       `document.getElementById("chatSendBtn").click()`
     );
