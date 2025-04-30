@@ -1,55 +1,99 @@
 // chat.ts
 
+import { ipcRenderer } from "electron";
+
 /**
- * Represents the chat functionality of the game map.
+ * Interface representing a chat message
  */
-const { ipcRenderer } = require("electron");
+interface ChatMessage {
+  sender: string;
+  content: string;
+  timestamp: Date;
+}
 
 /**
  * Adds an event listener to the message form and handles the submission of messages.
  * @param e - The submit event.
+ * @throws {Error} If the message form or input element is not found
  */
-document.getElementById("message-form")
-  ?.addEventListener("submit", function (e) {
-    e.preventDefault();
+function initializeChat(): void {
+  const messageForm = document.getElementById("message-form");
+  if (!messageForm) {
+    throw new Error("Message form element not found");
+  }
 
-    /**
-     * Represents the input element for messages.
-     */
-    const input = document.getElementById("message-input") as HTMLInputElement;
-    const message = input?.value.trim();
-
-    if (message) {
-      displayMessage("You", message);
-      input.value = "";
-
-      // Here, you would send the message to your AI Dungeon Master and get a response
-      // For demonstration, we'll just echo the message
-      displayMessage("Dungeon Master", message); // Replace this with actual AI response
-
-      callMainProcessFunction(message);
-    }
-  });
-
-/**
- * Displays a message in the chat.
- * @param sender - The sender of the message.
- * @param message - The message content.
- */
-function displayMessage(sender: string, message: string) {
-  const messageDiv = document.createElement("div");
-  messageDiv.textContent = `${sender}: ${message}`;
-  document.getElementById("messages")?.appendChild(messageDiv);
+  messageForm.addEventListener("submit", handleMessageSubmit);
 }
 
 /**
- * Calls a function in the main process with the provided message.
- * @param message - The message to send to the main process.
+ * Handles the submission of a chat message
+ * @param e - The submit event
+ */
+function handleMessageSubmit(e: Event): void {
+  e.preventDefault();
+
+  const input = document.getElementById("message-input") as HTMLInputElement;
+  if (!input) {
+    console.error("Message input element not found");
+    return;
+  }
+
+  const message = input.value.trim();
+  if (!message) {
+    return;
+  }
+
+  try {
+    // Display user message
+    displayMessage({ sender: "You", content: message, timestamp: new Date() });
+    input.value = "";
+
+    // Send message to main process
+    callMainProcessFunction(message);
+  } catch (error) {
+    console.error("Error handling message submission:", error);
+  }
+}
+
+/**
+ * Displays a message in the chat interface
+ * @param message - The chat message to display
+ */
+function displayMessage(message: ChatMessage): void {
+  const messagesContainer = document.getElementById("messages");
+  if (!messagesContainer) {
+    console.error("Messages container not found");
+    return;
+  }
+
+  const messageDiv = document.createElement("div");
+  messageDiv.className = "message";
+  messageDiv.innerHTML = `
+    <span class="sender">${message.sender}</span>
+    <span class="timestamp">${message.timestamp.toLocaleTimeString()}</span>
+    <p class="content">${message.content}</p>
+  `;
+  
+  messagesContainer.appendChild(messageDiv);
+  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+/**
+ * Sends a message to the main process via IPC
+ * @param message - The message to send
  */
 function callMainProcessFunction(message: string): void {
-  ipcRenderer.send("chatRequest", message);
+  try {
+    ipcRenderer.send("chatRequest", message);
+  } catch (error) {
+    console.error("Error sending message to main process:", error);
+    displayMessage({
+      sender: "System",
+      content: "Error sending message. Please try again.",
+      timestamp: new Date()
+    });
+  }
 }
 
-function neverUserd() {
-  console.log("never used");
-}
+// Initialize chat when DOM is loaded
+document.addEventListener("DOMContentLoaded", initializeChat);

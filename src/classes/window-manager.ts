@@ -5,6 +5,17 @@ export class WindowManager {
   private mainWindow!: BrowserWindow;
   private chatWindow!: BrowserWindow;
 
+  /**
+   * Gets the number of active windows
+   * @returns The number of active windows
+   */
+  public getWindowCount(): number {
+    let count = 0;
+    if (!this.mainWindow.isDestroyed()) count++;
+    if (!this.chatWindow.isDestroyed()) count++;
+    return count;
+  }
+
   public createMainWindow(): void {
     this.mainWindow = new BrowserWindow({
       width: 800,

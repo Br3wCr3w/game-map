@@ -10,32 +10,71 @@ config();
 const messageHandler = new MessageHandler();
 const windowManager = new WindowManager();
 
-// Main IPC listener for chat requests
-ipcMain.on("chatRequest", (event, arg: string) => {
-  console.log("requesting chat insert of message:", arg);
+/**
+ * Handles chat requests from the renderer process
+ * @param event - The IPC event
+ * @param message - The message content
+ */
+function handleChatRequest(event: Electron.IpcMainEvent, message: string): void {
+  console.log("[Chat] Received message:", message);
+  
   messageHandler
-    .handleChatRequest(arg)
+    .handleChatRequest(message)
     .then((response) => {
-      console.log("updating main window with response");
-      windowManager
-        .updateMainWindow(response)
-        .then(() => {
-          console.log("Main window updated with response:", response);
-        })
-        .catch((error) => console.error("Error updating main window:", error));
+      console.log("[Chat] Processing response:", response);
+      return windowManager.updateMainWindow(response);
     })
-    .catch((error) => console.error("Error handling chat request:", error));
-});
+    .then(() => {
+      console.log("[Chat] Main window updated successfully");
+    })
+    .catch((error) => {
+      console.error("[Chat] Error processing chat request:", error);
+      // Notify the renderer process of the error
+      event.reply("chatError", {
+        message: "Failed to process chat request",
+        error: error.message
+      });
+    });
+}
+
+/**
+ * Initializes the application windows
+ */
+async function initializeWindows(): Promise<void> {
+  try {
+    await windowManager.createChatWindow();
+    await windowManager.createMainWindow();
+    console.log("[App] Windows initialized successfully");
+  } catch (error) {
+    console.error("[App] Failed to initialize windows:", error);
+    app.quit();
+  }
+}
+
+// Set up IPC listeners
+ipcMain.on("chatRequest", handleChatRequest);
 
 // Handle app readiness
-app.whenReady().then(() => {
-  windowManager.createChatWindow();
-  windowManager.createMainWindow();
-});
+app.whenReady()
+  .then(initializeWindows)
+  .catch((error) => {
+    console.error("[App] Failed to initialize application:", error);
+    app.quit();
+  });
 
-// Quit when all windows are closed, except on macOS
+// Handle window-all-closed event
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
+  }
+});
+
+// Handle activate event (macOS)
+app.on("activate", () => {
+  if (windowManager.getWindowCount() === 0) {
+    initializeWindows().catch((error) => {
+      console.error("[App] Failed to recreate windows:", error);
+      app.quit();
+    });
   }
 });
