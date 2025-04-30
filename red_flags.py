@@ -5,6 +5,7 @@ import os
 import sys
 import json
 import base64
+import sqlite3
 from typing import Any
 
 # Red Flag 1: Hardcoded credentials in the code
@@ -98,6 +99,28 @@ def handle_user_request(request_data):
         return f"<div>{user_data}</div>"
     else:
         return user_data
+
+# Red Flag 13: SQL Injection vulnerability
+def get_user_by_username(username):
+    # WARNING: This is vulnerable to SQL injection attacks!
+    # Never concatenate user input directly into SQL queries
+    
+    # Connect to the database
+    conn = sqlite3.connect('users.db')
+    cursor = conn.cursor()
+    
+    # VULNERABLE CODE: Direct string concatenation in SQL query
+    query = "SELECT * FROM users WHERE username = '" + username + "'"
+    
+    # Execute the vulnerable query
+    cursor.execute(query)
+    result = cursor.fetchone()
+    
+    conn.close()
+    return result
+    
+    # NOTE: The proper way would be to use parameterized queries:
+    # cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
 
 if __name__ == "__main__":
     # Red Flag 11: No proper main function structure
