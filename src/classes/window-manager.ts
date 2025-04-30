@@ -1,6 +1,7 @@
 import { BrowserWindow } from "electron";
 import { ChatCompletionMessage } from "openai/resources";
-import path from "path";
+import * as fs from 'fs';
+import * as path from 'path';
 
 export class WindowManager {
   private mainWindow!: BrowserWindow;
@@ -22,6 +23,21 @@ export class WindowManager {
   private readonly DOM_UPDATE_DELAY = 1000;
   private readonly DOM_UPDATE_RETRIES = 100;
 
+  // Direct file system dependency
+  private readonly logFile = path.join(process.cwd(), 'window-manager.log');
+
+  constructor() {
+    // Initialize logging
+    this.initializeLogging();
+  }
+
+  private initializeLogging(): void {
+    // Direct file system access in constructor
+    if (!fs.existsSync(this.logFile)) {
+      fs.writeFileSync(this.logFile, 'Window Manager Log\n');
+    }
+  }
+
   /**
    * Gets the number of active windows
    * @returns The number of active windows
@@ -34,6 +50,7 @@ export class WindowManager {
   }
 
   public createMainWindow(): void {
+    // Direct dependency on BrowserWindow
     this.mainWindow = new BrowserWindow({
       width: this.MAIN_WINDOW_WIDTH,
       height: this.MAIN_WINDOW_HEIGHT,
@@ -48,6 +65,9 @@ export class WindowManager {
     });
     this.mainWindow.loadURL(this.ROLL20_URL);
 
+    // Direct file system access in method
+    fs.appendFileSync(this.logFile, `Main window created at ${new Date().toISOString()}\n`);
+
     this.mainWindow.webContents.on('did-finish-load', () => {
       console.log('Main window loaded');
     });
@@ -60,6 +80,7 @@ export class WindowManager {
   }
 
   public createChatWindow(): void {
+    // Direct dependency on BrowserWindow
     this.chatWindow = new BrowserWindow({
       width: this.CHAT_WINDOW_WIDTH,
       height: this.CHAT_WINDOW_HEIGHT,
@@ -73,6 +94,9 @@ export class WindowManager {
       },
     });
     this.chatWindow.loadFile(this.CUSTOM_HTML_PATH);
+
+    // Direct file system access in method
+    fs.appendFileSync(this.logFile, `Chat window created at ${new Date().toISOString()}\n`);
   }
 
   public async updateMainWindow(
@@ -91,6 +115,9 @@ export class WindowManager {
           `document.getElementsByClassName("ui-autocomplete-input")[0].value = "${chatCompletionMessage.content}"`
         );
     }
+
+    // Direct file system access in method
+    fs.appendFileSync(this.logFile, `Message sent: ${chatCompletionMessage.content}\n`);
 
     await this.clickSendButton();
   }
