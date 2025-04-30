@@ -59,6 +59,46 @@ def save_to_database(data: Any):
     with open("database.txt", "w") as f:
         f.write(str(data))
 
+# Red Flag 12: Function with too many responsibilities and poor documentation
+def handle_user_request(request_data):
+    # This function does too many things and has no proper documentation
+    # It handles user authentication, data processing, file operations, and email sending
+    # all in one function, making it hard to test and maintain
+    
+    # Authentication
+    if request_data.get('token') != API_KEY:
+        return "Invalid token"
+    
+    # Data processing
+    user_id = request_data.get('user_id')
+    if not user_id:
+        return "Missing user_id"
+    
+    # File operations
+    try:
+        with open(f"user_{user_id}.json", "r") as f:
+            user_data = json.load(f)
+    except:
+        return "User not found"
+    
+    # More processing
+    if user_data.get('status') == 'inactive':
+        return "User is inactive"
+    
+    # Email sending (simulated)
+    print(f"Sending email to {user_data.get('email')}")
+    
+    # Database update
+    save_to_database(user_data)
+    
+    # Return multiple types of responses
+    if request_data.get('format') == 'json':
+        return json.dumps(user_data)
+    elif request_data.get('format') == 'html':
+        return f"<div>{user_data}</div>"
+    else:
+        return user_data
+
 if __name__ == "__main__":
     # Red Flag 11: No proper main function structure
     user_input = input("Enter some code to execute: ")
