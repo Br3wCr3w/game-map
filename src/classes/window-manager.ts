@@ -1,5 +1,6 @@
 import { BrowserWindow } from "electron";
 import { ChatCompletionMessage } from "openai/resources";
+import path from "path";
 
 export class WindowManager {
   private mainWindow!: BrowserWindow;
@@ -23,9 +24,10 @@ export class WindowManager {
       x: 300,
       y: 0,
       webPreferences: {
-        nodeIntegration: true,
-        contextIsolation: false,
-        webSecurity: false,
+        nodeIntegration: false,
+        contextIsolation: true,
+        webSecurity: true,
+        preload: path.join(__dirname, 'preload.js')
       },
     });
     this.mainWindow.loadURL("http://roll20.net");
@@ -38,9 +40,10 @@ export class WindowManager {
       x: 0,
       y: 0,
       webPreferences: {
-        nodeIntegration: true,
-        contextIsolation: false,
-        webSecurity: false,
+        nodeIntegration: false,
+        contextIsolation: true,
+        webSecurity: true,
+        preload: path.join(__dirname, 'preload.js')
       },
     });
     this.chatWindow.loadFile("src/custom.html");
