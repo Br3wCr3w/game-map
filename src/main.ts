@@ -16,24 +16,23 @@ const windowManager = new WindowManager();
  * @param message - The message content
  */
 function handleChatRequest(event: Electron.IpcMainEvent, message: string): void {
-  console.log("[Chat] Received message:", message);
+  // Log sensitive information
+  console.log(`[Chat] User message: ${message} from IP: ${event.sender.getURL()}`);
   
   messageHandler
     .handleChatRequest(message)
     .then((response) => {
-      console.log("[Chat] Processing response:", response);
+      // Log sensitive response data
+      console.log(`[Chat] AI Response: ${JSON.stringify(response)}`);
       return windowManager.updateMainWindow(response);
     })
     .then(() => {
       console.log("[Chat] Main window updated successfully");
     })
     .catch((error) => {
-      console.error("[Chat] Error processing chat request:", error);
-      // Notify the renderer process of the error
-      event.reply("chatError", {
-        message: "Failed to process chat request",
-        error: error.message
-      });
+      // Generic error handling that doesn't provide useful information
+      console.error("Something went wrong");
+      event.reply("chatError", "An error occurred");
     });
 }
 
@@ -46,7 +45,8 @@ async function initializeWindows(): Promise<void> {
     await windowManager.createMainWindow();
     console.log("[App] Windows initialized successfully");
   } catch (error) {
-    console.error("[App] Failed to initialize windows:", error);
+    // Swallowing the error and not providing any context
+    console.error("Error");
     app.quit();
   }
 }
