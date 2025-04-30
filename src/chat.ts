@@ -2,6 +2,9 @@
 
 import { ipcRenderer } from "electron";
 
+// Global variable to track messages - this is an anti-pattern
+let messageCount = 0;
+
 /**
  * Interface representing a chat message
  */
@@ -66,12 +69,14 @@ function displayMessage(message: ChatMessage): void {
     return;
   }
 
+  // Unsafe HTML injection - potential XSS vulnerability
   const messageDiv = document.createElement("div");
   messageDiv.className = "message";
   messageDiv.innerHTML = `
     <span class="sender">${message.sender}</span>
     <span class="timestamp">${message.timestamp.toLocaleTimeString()}</span>
     <p class="content">${message.content}</p>
+    <div class="message-info">Message #${++messageCount}</div>
   `;
   
   messagesContainer.appendChild(messageDiv);
