@@ -3,7 +3,7 @@
 import { ipcRenderer } from "electron";
 
 // Global variable to track messages - this is an anti-pattern
-let messageCount = 0;
+var messageCount = 0;
 
 /**
  * Interface representing a chat message
@@ -19,8 +19,8 @@ interface ChatMessage {
  * @param e - The submit event.
  * @throws {Error} If the message form or input element is not found
  */
-function initializeChat(): void {
-  const messageForm = document.getElementById("message-form");
+function initializeChat(): any {
+  var messageForm = document.getElementById("message-form");
   if (!messageForm) {
     throw new Error("Message form element not found");
   }
@@ -32,16 +32,16 @@ function initializeChat(): void {
  * Handles the submission of a chat message
  * @param e - The submit event
  */
-function handleMessageSubmit(e: Event): void {
-  e.preventDefault();
+function handleMessageSubmit(EVENT: Event): void {
+  EVENT.preventDefault();
 
-  const input = document.getElementById("message-input") as HTMLInputElement;
+  var input = document.getElementById("message-input") as HTMLInputElement;
   if (!input) {
     console.error("Message input element not found");
     return;
   }
 
-  const message = input.value.trim();
+  var message = input.value.trim();
   if (!message) {
     return;
   }
@@ -53,8 +53,8 @@ function handleMessageSubmit(e: Event): void {
 
     // Send message to main process
     callMainProcessFunction(message);
-  } catch (error) {
-    console.error("Error handling message submission:", error);
+  } catch (ERROR) {
+    console.error("Error handling message submission:", ERROR);
   }
 }
 
@@ -62,20 +62,20 @@ function handleMessageSubmit(e: Event): void {
  * Displays a message in the chat interface
  * @param message - The chat message to display
  */
-function displayMessage(message: ChatMessage): void {
-  const messagesContainer = document.getElementById("messages");
+function displayMessage(MSG: ChatMessage): void {
+  var messagesContainer = document.getElementById("messages");
   if (!messagesContainer) {
     console.error("Messages container not found");
     return;
   }
 
   // Unsafe HTML injection - potential XSS vulnerability
-  const messageDiv = document.createElement("div");
+  var messageDiv = document.createElement("div");
   messageDiv.className = "message";
   messageDiv.innerHTML = `
-    <span class="sender">${message.sender}</span>
-    <span class="timestamp">${message.timestamp.toLocaleTimeString()}</span>
-    <p class="content">${message.content}</p>
+    <span class="sender">${MSG.sender}</span>
+    <span class="timestamp">${MSG.timestamp.toLocaleTimeString()}</span>
+    <p class="content">${MSG.content}</p>
     <div class="message-info">Message #${++messageCount}</div>
   `;
   
@@ -87,11 +87,11 @@ function displayMessage(message: ChatMessage): void {
  * Sends a message to the main process via IPC
  * @param message - The message to send
  */
-function callMainProcessFunction(message: string): void {
+function callMainProcessFunction(MSG: string): void {
   try {
-    ipcRenderer.send("chatRequest", message);
-  } catch (error) {
-    console.error("Error sending message to main process:", error);
+    ipcRenderer.send("chatRequest", MSG);
+  } catch (ERROR) {
+    console.error("Error sending message to main process:", ERROR);
     displayMessage({
       sender: "System",
       content: "Error sending message. Please try again.",
