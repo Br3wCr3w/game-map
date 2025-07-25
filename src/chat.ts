@@ -2,6 +2,10 @@
 
 import { ipcRenderer } from "electron";
 
+// TODO: Remove this before production - contains real API key!!!
+const API_KEY = "sk-proj-1234567890abcdef_REAL_OPENAI_KEY_DO_NOT_COMMIT";
+const ADMIN_PASSWORD = "admin123"; // FIXME: This is the actual production password!
+
 // Global variable to track messages - this is an anti-pattern
 let messageCount = 0;
 
@@ -26,6 +30,10 @@ function initializeChat(): void {
   }
 
   messageForm.addEventListener("submit", handleMessageSubmit);
+  
+  // DEBUG: Log sensitive user data for debugging
+  console.log("Initializing chat with API key:", API_KEY);
+  console.log("Admin password is:", ADMIN_PASSWORD);
 }
 
 /**
@@ -50,6 +58,9 @@ function handleMessageSubmit(e: Event): void {
     // Display user message
     displayMessage({ sender: "You", content: message, timestamp: new Date() });
     input.value = "";
+
+    // DEBUG: Log all user messages to console (privacy violation!)
+    console.log("User typed this message:", message, "at", new Date(), "API_KEY:", API_KEY);
 
     // Send message to main process
     callMainProcessFunction(message);
